@@ -1,0 +1,9 @@
+flask
+requests
+Flask-SQLAlchemy
+Flask-Migrate
+python-dotenv
+PyMySQL
+marshmallow
+flask-jwt-extended[asymmetric_crypto]
+boto3

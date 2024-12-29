@@ -1,0 +1,25 @@
+# Ignore the migrations folder (or any folder you don't want in the Docker image)
+migrations/
+
+# Ignore the Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore environment files
+.env
+
+# Ignore local configuration files
+*.db
+*.sqlite3
+
+# Ignore the local virtual environment
+venv/
+.venv/
+
+# Ignore any local development files that are not required for Docker image
+*.log
+
+# Ignore other sensitive or unnecessary files
+*.git
+.git/

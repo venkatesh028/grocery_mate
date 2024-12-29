@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  localstack:
+    image: localstack/localstack
+    container_name: ecommerce-localstack
+    ports:
+      - "4566:4566"  # Main LocalStack port
+      - "4571:4571"  # Optional S3-specific port
+    environment:
+      - SERVICES=s3  # Enable AWS S3 service
+      - DEBUG=1  # Debug mode for better logs
+      - EXTRA_CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173  # Allow your frontend's origin
+      - EXTRA_CORS_ALLOW_HEADERS=Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token
+      - EXTRA_CORS_EXPOSE_HEADERS=Authorization,Content-Type
+      - DISABLE_CORS_CHECKS=0  # Enable specific CORS checks
+      - TMPDIR=/custom_tmp  # Use custom temp directory
+    volumes:
+      - "./data/localstack:/data/localstack"  # Persist data here
+      - "./custom_tmp:/custom_tmp"  # Mount a custom temp directory
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Required for Docker inside LocalStack
+    networks:
+      - ecommerce-localstack-network
+
+  flask_app:
+    build: .
+    container_name: flask_app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=run.py
+      - FLASK_ENV=development
+      - DATABASE_URL=mysql+pymysql://root:root@mysql_db:3306/ecommerce
+      - JWT_SECRET_KEY=9f37b2e7141d6354d87d15bb6f19486a2f9379451c7a4e3f5d519a643d5e7e80
+      - S3_ENDPOINT_URL=http://localstack:4566
+    depends_on:
+      - mysql
+      - localstack
+    networks:
+      - ecommerce-localstack-network
+    volumes:
+      - .:/app
+    command: ["./migrate.sh"]  # Run migration script when the container starts
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ecommerce-localstack-network
+
+volumes:
+  mysql_data:
+
+networks:
+  ecommerce-localstack-network:
+    driver: bridge

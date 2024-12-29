@@ -1,0 +1,24 @@
+migrations/
+
+# Ignore the Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore environment files
+.env
+
+# Ignore local configuration files
+*.db
+*.sqlite3
+
+# Ignore the local virtual environment
+venv/
+.venv/
+
+# Ignore any local development files that are not required for Docker image
+*.log
+
+.idea/
+
+migrate.sh
