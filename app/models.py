@@ -37,7 +37,7 @@ class Product(db.Model):
     update_at = db.Column(DateTime, default=datetime.now, onupdate=datetime.now)
     is_sold = db.Column(Boolean, nullable=False, default=False)
     user_id = db.Column(db.Integer, nullable=False)
-    image_url = db.Column(Text, nullable=False)
+    image_url = db.Column(Text, nullable=True)
 
     def to_dict(self):
         return {

@@ -7,3 +7,4 @@ PyMySQL
 marshmallow
 flask-jwt-extended[asymmetric_crypto]
 boto3
+flask-cors
